@@ -12,11 +12,15 @@ import java.util.concurrent.TimeUnit;
 public class TokenCache {
     private static Logger logger = LoggerFactory.getLogger(TokenCache.class);
 
+    public static final String TOKEN_PREFIX =  "token_";
+
+
+    //Guava缓存
     private static LoadingCache<String,String> localCache =
             CacheBuilder.newBuilder()
-            .initialCapacity(1000)
-            .maximumSize(10000)
-            .expireAfterAccess(12,TimeUnit.HOURS)
+            .initialCapacity(1000) //初始化一个1000的容量
+            .maximumSize(10000)    //不够了之后扩展到10000，超过10000用LRU算法移除最少使用
+            .expireAfterAccess(12,TimeUnit.HOURS)//缓存有效期是12个小时
             .build(new CacheLoader<String, String>() {
                 //默认的数据加载实现，当调用get取值的时候，如果key没有对应的值，就调用这个方法进行加载
                 @Override
